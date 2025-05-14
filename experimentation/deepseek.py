@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 class Deekseekai:
-    def __init__(self):
+    def __init__(self, model):
         load_dotenv(override=True)
         self.api_key = os.getenv('DEEPSEEK_API_KEY')
         if self.api_key and len(self.api_key)>10:
@@ -12,7 +12,7 @@ class Deekseekai:
         else:
             print("There might be a problem with your DEEPSEEK AI API key? Please visit the troubleshooting notebook!")
             
-        self.MODEL = 'deepseek-chat'
+        self.MODEL = model # 'deepseek-chat'
         self.deepseekai = OpenAI(api_key=self.api_key, base_url="https://api.deepseek.com")
 
 

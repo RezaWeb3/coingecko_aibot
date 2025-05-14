@@ -3,11 +3,11 @@ from dotenv import load_dotenv
 import requests
 
 class Llama:
-    def __init__(self):
+    def __init__(self, model):
         
         self.OllOLLAMA_API = "http://localhost:11434/api/chat"
         self.HEADERS = {"Content-Type": "application/json"}
-        self.MODEL = "llama3.2"
+        self.MODEL = model # "llama3.2"
 
     def askQuestion(self, system_prompt, user_question):
         messages = [

@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 class Openai:
-    def __init__(self):
+    def __init__(self, model):
         load_dotenv(override=True)
         self.api_key = os.getenv('OPENAI_API_KEY')
         if self.api_key and self.api_key.startswith('sk-proj-') and len(self.api_key)>10:
@@ -12,7 +12,7 @@ class Openai:
         else:
             print("There might be a problem with your OPEN AI API key? Please visit the troubleshooting notebook!")
             
-        self.MODEL = 'gpt-4o-mini'
+        self.MODEL = model #'gpt-4o-mini'
         self.openai = OpenAI()
 
 
@@ -26,5 +26,13 @@ class Openai:
         )
         result = response.choices[0].message.content
         return result
-
     
+    def respondMessages(self, system_prompt, messages):
+        response = self.openai.chat.completions.create(
+            model= self.MODEL,
+            messages = messages
+        )
+        result = response.choices[0].message.content
+        return result
+
+
