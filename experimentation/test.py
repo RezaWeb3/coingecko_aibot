@@ -1,9 +1,9 @@
-from website import Website
-from open_ai import Openai 
-from llama import Llama
-from deepseek import Deekseekai
-from claude import Claude
-from gemini import Geminiai
+from helper.website import Website
+from model_wrappers.open_ai import Openai 
+from model_wrappers.llama import Llama
+from model_wrappers.deepseek import Deekseekai
+from model_wrappers.claude import Claude
+from model_wrappers.gemini import Geminiai
 
 
 deepseekai = Deekseekai()

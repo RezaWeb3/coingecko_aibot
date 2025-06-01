@@ -48,11 +48,22 @@ class Openai:
     
     
     def respondMessages(self, system_prompt, messages):
+       
         response = self.openai.chat.completions.create(
             model= self.MODEL,
-            messages = messages
+            messages = [{"role":"system", "content":system_prompt}] + messages
         )
         result = response.choices[0].message.content
         return result
 
-
+    def respondStream(self, system_prompt, messages):
+        response_stream = self.openai.chat.completions.create(
+            model = self.MODEL, 
+            messages = [{"role":"system", "content":system_prompt}] + messages, 
+            stream = True
+        )
+        
+        result = ""
+        for chunk in response_stream:
+            result += chunk.choices[0].delta.content or ""
+            yield result

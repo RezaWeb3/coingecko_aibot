@@ -1,9 +1,9 @@
-from website import Website
-from open_ai import Openai 
-from llama import Llama
+from helper.website import Website
+from model_wrappers.open_ai import Openai 
+from model_wrappers.llama import Llama
 
 
-oi = Openai()
+oi = Openai("gpt-4o-mini")
 ollama = Llama()
 
 

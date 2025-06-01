@@ -27,5 +27,19 @@ class Deekseekai:
         )
         result = response.choices[0].message.content
         return result
+    
+    def askQuestionStream(self, system_prompt, user_question):
+        response = self.deepseekai.chat.completions.create(
+            model = self.MODEL, 
+            messages = [
+                {"role":"system", "content":system_prompt},
+                {"role":"user", "content": user_question}
+            ],
+            stream=True
+        )
+        result = ""
+        for chunk in response:
+            result += chunk.choices[0].delta.content
+            yield result
 
     
