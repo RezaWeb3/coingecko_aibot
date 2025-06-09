@@ -3,6 +3,8 @@
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
+import base64
+
 class Openai:
     def __init__(self, model):
         load_dotenv(override=True)
@@ -56,6 +58,15 @@ class Openai:
         result = response.choices[0].message.content
         return result
 
+    def respondMessages(self, system_prompt, messages, tools):
+        response = self.openai.chat.completions.create(
+            model= self.MODEL,
+            messages = [{"role":"system", "content":system_prompt}] + messages,
+            tools= tools
+        )
+        
+        return response
+
     def respondStream(self, system_prompt, messages):
         response_stream = self.openai.chat.completions.create(
             model = self.MODEL, 
@@ -67,3 +78,19 @@ class Openai:
         for chunk in response_stream:
             result += chunk.choices[0].delta.content or ""
             yield result
+
+
+    def draw(self, prompt_str):
+        image_response = self.openai.images.generate(
+            model="dall-e-3",
+            prompt=prompt_str,
+            size="1024x1024",
+            n=1,
+            response_format="b64_json")
+        image_base64 = image_response.data[0].b64_json
+        image_data = base64.b64decode(image_base64)
+
+        return image_data
+    
+    def voice(self):
+        return
