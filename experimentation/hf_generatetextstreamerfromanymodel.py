@@ -7,17 +7,12 @@ Original file is located at
     https://colab.research.google.com/drive/1ngCzODBD5nZuRKf6qR_pEUqDfgwBwQ_M
 """
 
-!pip install -q requests torch bitsandbytes transformers sentencepiece accelerate
-
-!pip uninstall -y bitsandbytes
-# 2. Reinstall with the proper 4-bit support
-!pip install bitsandbytes --prefer-binary --upgrade
-#!pip install -U bitsandbytes
-
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, TextStreamer, BitsAndBytesConfig
 import gc
-from google.colab import userdata
+import os
+from dotenv import load_dotenv
+#from google.colab import userdata
 from huggingface_hub import login
 
 # for proper outputing both stream and getting the output
@@ -25,7 +20,8 @@ from transformers import TextIteratorStreamer
 import threading
 
 # login
-login(userdata.get('HF_TOKEN'))
+load_dotenv(override=True)
+hf_token = os.getenv('HUGGINGFACE_TOKEN')
 
 # instruct models
 LLAMA = "meta-llama/Meta-Llama-3.1-8B-Instruct"
@@ -38,6 +34,7 @@ messages = [{"role":"system", "content":"You are a brutally honest assisstant. N
             {"role":"user", "content": "I think it is ok to flirt with strangers. That is not cheating."}]
 
 # we will reduce the accuracy of the model by reducing the size.
+
 quantization_config = BitsAndBytesConfig(load_in_4bit=True,
                                          bnb_4bit_compute_dtype=torch.bfloat16,
                                          bnb_4bit_use_double_quant=True,
@@ -82,20 +79,17 @@ def generate_text(model, messages):
   del tokenizer
   #del output
   gc.collect()
-  torch.cuda.empty_cache()
+  torch.cuda.empty_cache()  
 
 
 
-
-
-selected_model = LAMMA
-messages = [{"role":"system", "content":"You are a brutally honest assisstant. No filters."},
-          {"role":"user", "content": "I think it is ok to flirt with strangers. That is not cheating."}]
-
-generate_text(selected_model, messages)
+#selected_model = LAMMA
+#messages = [{"role":"system", "content":"You are a brutally honest assisstant. No filters."},
+#          {"role":"user", "content": "I think it is ok to flirt with strangers. That is not cheating."}]
+#generate_text(selected_model, messages)
 
 selected_model = GEMMA2
 messages = [{'role':'user', 'content':'You are a brutally honest assisstant. Someone said that he thinks it is ok to flirt with strangers. That is not cheating. '}]
 text = "".join(generate_text(selected_model, messages))
 
-text
+print(text)
