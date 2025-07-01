@@ -17,15 +17,10 @@ def generatecode(model, language, code):
         }
     ]
 
-    pprint(messages)
-
-
-
-    result = lang_model.chat.completions.create(messages=messages, model=model)#, stream=True)
-    return result.choices[0].message.content
-   # for chunk in result:       
-   #     delta = chunk.choices[0].delta.content
-   #     if delta != None:
-   #         output += delta
-   #         yield delta 
- 
+    result = lang_model.chat.completions.create(messages=messages, model=model, stream=True)
+   # return result.choices[0].message.content
+    output = ''
+    for chunk in result:   
+        delta = chunk.choices[0].delta.content or ""
+        output += delta
+        yield delta 
